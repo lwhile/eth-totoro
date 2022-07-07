@@ -11,8 +11,8 @@ import (
 )
 
 const (
-	defaultPollingInterval = time.Second
-	blockNumStepBack = 5
+	defaultPollingInterval = 5 * time.Second
+	blockNumStepBack       = 5
 )
 
 type Subscriber struct {
@@ -40,7 +40,7 @@ func NewSubscriber(
 		logs:            make(map[common.Hash]uint64),
 		pollingInternal: defaultPollingInterval,
 		logCh:           ch,
-		firstQuery: true,
+		firstQuery:      true,
 	}
 	scrb.subscribe()
 	return scrb
@@ -62,8 +62,8 @@ func (scrb *Subscriber) polling() {
 		case <-ticker.C:
 			q := scrb.q
 			if !scrb.firstQuery {
-			    lastBlockTo := q.ToBlock
-			    if lastBlockTo == nil {
+				lastBlockTo := q.ToBlock
+				if lastBlockTo == nil {
 					blockNumNow, err := scrb.ethCli.BlockNumber(scrb.ctx)
 					if err != nil {
 						scrb.errCh <- err
@@ -93,7 +93,7 @@ func (scrb *Subscriber) polling() {
 
 func (scrb *Subscriber) clearLogs(lastBlock uint64) {
 	for k, blockNum := range scrb.logs {
-		if blockNum < lastBlock - blockNumStepBack {
+		if blockNum < lastBlock-blockNumStepBack {
 			delete(scrb.logs, k)
 		}
 	}
