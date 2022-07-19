@@ -86,7 +86,9 @@ func (scrb *Subscriber) polling() {
 					scrb.logCh <- lg
 				}
 			}
-			scrb.clearLogs(q.FromBlock.Uint64())
+			if !scrb.firstQuery {
+				scrb.clearLogs(scrb.q.FromBlock.Uint64())
+			}
 		}
 	}
 }
