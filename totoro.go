@@ -78,7 +78,6 @@ func (scrb *Subscriber) polling() {
 				scrb.errCh <- err
 				continue
 			}
-			scrb.firstQuery = false
 			for _, lg := range lgs {
 				lg := lg
 				if _, ok := scrb.logs[lg.TxHash]; !ok {
@@ -89,6 +88,7 @@ func (scrb *Subscriber) polling() {
 			if !scrb.firstQuery {
 				scrb.clearLogs(scrb.q.FromBlock.Uint64())
 			}
+			scrb.firstQuery = false
 		}
 	}
 }
